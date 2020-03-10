@@ -1,0 +1,42 @@
+def midpoint_integration(f, a, b, n=100):
+  h = (b-a)/n
+  I = 0
+  for i in range(n):
+    I += f(a + i*h + 0.5*h)
+  return h*I
+  
+from math import *
+f_formula = input("What is f?: ")
+a = eval(input("What is a?: "))
+b = eval(input("What is b?: "))
+ask = input("Would you like to provide n? (y/n): ")
+
+code = """
+def g(x):
+  return %s 
+""" % f_formula
+exec(code)
+
+answer = False
+max_trials = 5
+trials = 0
+while answer == False and trials < max_trials:
+  if ask == "y" or ask == "Y":
+    n = eval(input("What is n?: "))
+    I = midpoint_integration(g,a,b,n)
+    print("Integral of %s on [%g,%g] with n=%d: %g" % \
+          (f_formula, a, b, n, I))
+    answer = True
+  elif ask == "n" or ask == "N":
+    I = midpoint_integration(g,a,b)
+    print("Integral of %s on [%g,%g] with n=100: %g" % \
+          (f_formula, a, b, I))
+    answer = True
+  else:
+    trials += 1
+    if trials == max_trials:
+      print("\nERROR: Too many incorrect trials. Try again.")
+    else:
+      print("\nERROR: Please provide an appropriate answer!")
+      print("Trials remaining: %d" % (max_trials-trials))
+      ask = input("Would you like to provide n? (y/n): ")
